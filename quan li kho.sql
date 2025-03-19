@@ -1,4 +1,4 @@
-﻿-- Ngắt kết nối khỏi cơ sở dữ liệu hiện tại
+-- Ngắt kết nối khỏi cơ sở dữ liệu hiện tại
 USE master;
 -- Kiểm tra và xóa cơ sở dữ liệu nếu đã tồn tại
 DROP DATABASE IF EXISTS QuanLyKho;
@@ -15,9 +15,9 @@ DROP TABLE IF EXISTS NhaCungCap;
 -- Tạo bảng NhaCungCap (Nhà cung cấp)
 CREATE TABLE NhaCungCap (
     MaNhaCungCap INT IDENTITY(1,1) PRIMARY KEY, -- Mã nhà cung cấp
-    TenNhaCungCap VARCHAR(255) NOT NULL,         -- Tên nhà cung cấp
-    TenLienHe VARCHAR(255) NOT NULL,             -- Tên người liên hệ
-    SoDienThoai VARCHAR(15),                    -- Số điện thoại
+    TenNhaCungCap NVARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,         -- Tên nhà cung cấp
+    TenLienHe VARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,             -- Tên người liên hệ
+    SoDienThoai NVARCHAR(15) COLLATE Vietnamese_CI_AS,                    -- Số điện thoại
     DiaChi TEXT                                  -- Địa chỉ
 );
 
@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS SanPham;
 -- Tạo bảng SanPham (Sản phẩm)
 CREATE TABLE SanPham (
     MaSanPham INT IDENTITY(1,1) PRIMARY KEY,    -- Mã sản phẩm
-    TenSanPham VARCHAR(255) NOT NULL,            -- Tên sản phẩm
+    TenSanPham NVARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,            -- Tên sản phẩm
     MoTa TEXT,                                   -- Mô tả sản phẩm
     SoLuongTon INT NOT NULL DEFAULT 0,           -- Số lượng trong kho
     Gia DECIMAL(10, 2) NOT NULL,                 -- Giá bán
@@ -41,9 +41,9 @@ DROP TABLE IF EXISTS KhachHang;
 -- Tạo bảng KhachHang (Khách hàng)
 CREATE TABLE KhachHang (
     MaKhachHang INT IDENTITY(1,1) PRIMARY KEY,  -- Mã khách hàng
-    TenKhachHang VARCHAR(255) NOT NULL,          -- Tên khách hàng
-    TenLienHe VARCHAR(255),                      -- Tên người liên hệ
-    SoDienThoai VARCHAR(15),                     -- Số điện thoại
+    TenKhachHang NVARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,          -- Tên khách hàng
+    TenLienHe NVARCHAR(255) COLLATE Vietnamese_CI_AS,                      -- Tên người liên hệ
+    SoDienThoai NVARCHAR(15) COLLATE Vietnamese_CI_AS,                     -- Số điện thoại
     DiaChi TEXT                                   -- Địa chỉ
 );
 
@@ -82,69 +82,77 @@ CREATE TABLE GiaoDichKho (
     MaSanPham INT,                                 -- Mã sản phẩm (Khóa ngoại)
     NgayGiaoDich DATE NOT NULL,                    -- Ngày giao dịch
     SoLuong INT NOT NULL,                          -- Số lượng thay đổi
-    LoaiGiaoDich VARCHAR(50),                      -- Loại giao dịch ("in" cho nhập kho, "out" cho xuất kho)
+    LoaiGiaoDich NVARCHAR(50) COLLATE Vietnamese_CI_AS,                      -- Loại giao dịch ("in" cho nhập kho, "out" cho xuất kho)
     MaDonHang INT,                                 -- Mã đơn hàng (nếu có)
     FOREIGN KEY (MaSanPham) REFERENCES SanPham(MaSanPham), -- Liên kết với bảng SanPham
     FOREIGN KEY (MaDonHang) REFERENCES DonHang(MaDonHang)  -- Liên kết với bảng DonHang
 );
 
+ALTER TABLE NhaCungCap ALTER COLUMN TenNhaCungCap NVARCHAR(255) COLLATE Vietnamese_CI_AS;
+ALTER TABLE NhaCungCap ALTER COLUMN TenLienHe NVARCHAR(255) COLLATE Vietnamese_CI_AS;
+ALTER TABLE NhaCungCap ALTER COLUMN DiaChi NVARCHAR(255) COLLATE Vietnamese_CI_AS;
 INSERT INTO NhaCungCap (TenNhaCungCap, TenLienHe, SoDienThoai, DiaChi)
 VALUES
-('Nha Cung Cấp 1', 'Nguyen Thi A', '0123456789', '123 Đường ABC, TP HCM'),
-('Nha Cung Cấp 2', 'Tran Thi B', '0123456790', '456 Đường DEF, TP HCM'),
-('Nha Cung Cấp 3', 'Le Thi C', '0123456791', '789 Đường GHI, TP HCM'),
-('Nha Cung Cấp 4', 'Pham Thi D', '0123456792', '101 Đường JKL, TP HCM'),
-('Nha Cung Cấp 5', 'Hoang Thi E', '0123456793', '202 Đường MNO, TP HCM'),
-('Nha Cung Cấp 6', 'Nguyen Thi F', '0123456794', '303 Đường PQR, TP HCM'),
-('Nha Cung Cấp 7', 'Tran Thi G', '0123456795', '404 Đường STU, TP HCM'),
-('Nha Cung Cấp 8', 'Le Thi H', '0123456796', '505 Đường VWX, TP HCM'),
-('Nha Cung Cấp 9', 'Pham Thi I', '0123456797', '606 Đường YZA, TP HCM'),
-('Nha Cung Cấp 10', 'Hoang Thi J', '0123456798', '707 Đường BCD, TP HCM'),
-('Nha Cung Cấp 11', 'Nguyen Thi K', '0123456799', '808 Đường EFG, TP HCM'),
-('Nha Cung Cấp 12', 'Tran Thi L', '0123456800', '909 Đường HIJ, TP HCM'),
-('Nha Cung Cấp 13', 'Le Thi M', '0123456801', '1010 Đường KLM, TP HCM'),
-('Nha Cung Cấp 14', 'Pham Thi N', '0123456802', '1111 Đường NOP, TP HCM'),
-('Nha Cung Cấp 15', 'Hoang Thi O', '0123456803', '1212 Đường QRS, TP HCM');
+(N'Nhà Cung Cấp 1', N'Nguyễn Thị An', '0123456789', N'123 Đường ABC, TP HCM'),
+(N'Nhà Cung Cấp 2', N'Trần Thị Bo', '0123456790', N'456 Đường DEF, TP HCM'),
+(N'Nhà Cung Cấp 3', N'Lê Thị Ca', '0123456791', N'789 Đường GHI, TP HCM'),
+(N'Nhà Cung Cấp 4', N'Phạm Thị Du', '0123456792', N'101 Đường JKL, TP HCM'),
+(N'Nhà Cung Cấp 5', N'Hoàng Thị En', '0123456793', N'202 Đường MNO, TP HCM'),
+(N'Nhà Cung Cấp 6', N'Nguyễn Thị Chuyên', '0123456794', N'303 Đường PQR, TP HCM'),
+(N'Nhà Cung Cấp 7', N'Trần Thị Hằng', '0123456795', N'404 Đường STU, TP HCM'),
+(N'Nhà Cung Cấp 8', N'Lê Thị Hiếu', '0123456796', N'505 Đường VWX, TP HCM'),
+(N'Nhà Cung Cấp 9', N'Phạm Thị Hoài', '0123456797', N'606 Đường YZA, TP HCM'),
+(N'Nhà Cung Cấp 10', N'Hoàng Thị Trang', '0123456798', N'707 Đường BCD, TP HCM'),
+(N'Nhà Cung Cấp 11', N'Nguyễn Thị Khánh', '0123456799', N'808 Đường EFG, TP HCM'),
+(N'Nhà Cung Cấp 12', N'Trần Thị Linh', '0123456800', N'909 Đường HIJ, TP HCM'),
+(N'Nhà Cung Cấp 13', N'Lê Thị Muộn', '0123456801', N'1010 Đường KLM, TP HCM'),
+(N'Nhà Cung Cấp 14', N'Phạm Thị Na', '0123456802', N'1111 Đường NOP, TP HCM'),
+(N'Nhà Cung Cấp 15', N'Hoàng Thị Phương', '0123456803', N'1212 Đường QRS, TP HCM');
 
 
+
+ALTER TABLE SanPham ALTER COLUMN TenSanPham NVARCHAR(255) COLLATE Vietnamese_CI_AS;
+ALTER TABLE SanPham ALTER COLUMN MoTa NVARCHAR(255) COLLATE Vietnamese_CI_AS;
 
 INSERT INTO SanPham (TenSanPham, MoTa, SoLuongTon, Gia, MaNhaCungCap)
 VALUES
-('Sản phẩm 1', 'Mô tả sản phẩm 1', 100, 50000, 1),
-('Sản phẩm 2', 'Mô tả sản phẩm 2', 150, 70000, 2),
-('Sản phẩm 3', 'Mô tả sản phẩm 3', 200, 60000, 3),
-('Sản phẩm 4', 'Mô tả sản phẩm 4', 120, 75000, 4),
-('Sản phẩm 5', 'Mô tả sản phẩm 5', 80, 45000, 5),
-('Sản phẩm 6', 'Mô tả sản phẩm 6', 300, 85000, 6),
-('Sản phẩm 7', 'Mô tả sản phẩm 7', 90, 55000, 7),
-('Sản phẩm 8', 'Mô tả sản phẩm 8', 110, 62000, 8),
-('Sản phẩm 9', 'Mô tả sản phẩm 9', 130, 70000, 9),
-('Sản phẩm 10', 'Mô tả sản phẩm 10', 140, 77000, 10),
-('Sản phẩm 11', 'Mô tả sản phẩm 11', 160, 82000, 11),
-('Sản phẩm 12', 'Mô tả sản phẩm 12', 210, 95000, 12),
-('Sản phẩm 13', 'Mô tả sản phẩm 13', 190, 67000, 13),
-('Sản phẩm 14', 'Mô tả sản phẩm 14', 250, 89000, 14),
-('Sản phẩm 15', 'Mô tả sản phẩm 15', 170, 64000, 15);
+(N'Sản phẩm 1', N'Mô tả sản phẩm 1', 100, 50000, 1),
+(N'Sản phẩm 2', N'Mô tả sản phẩm 2', 150, 70000, 2),
+(N'Sản phẩm 3', N'Mô tả sản phẩm 3', 200, 60000, 3),
+(N'Sản phẩm 4', N'Mô tả sản phẩm 4', 120, 75000, 4),
+(N'Sản phẩm 5', N'Mô tả sản phẩm 5', 80, 45000, 5),
+(N'Sản phẩm 6', N'Mô tả sản phẩm 6', 300, 85000, 6),
+(N'Sản phẩm 7', N'Mô tả sản phẩm 7', 90, 55000, 7),
+(N'Sản phẩm 8', N'Mô tả sản phẩm 8', 110, 62000, 8),
+(N'Sản phẩm 9', N'Mô tả sản phẩm 9', 130, 70000, 9),
+(N'Sản phẩm 10', N'Mô tả sản phẩm 10', 140, 77000, 10),
+(N'Sản phẩm 11', N'Mô tả sản phẩm 11', 160, 82000, 11),
+(N'Sản phẩm 12', N'Mô tả sản phẩm 12', 210, 95000, 12),
+(N'Sản phẩm 13', N'Mô tả sản phẩm 13', 190, 67000, 13),
+(N'Sản phẩm 14', N'Mô tả sản phẩm 14', 250, 89000, 14),
+(N'Sản phẩm 15', N'Mô tả sản phẩm 15', 170, 64000, 15);
 
-
+ALTER TABLE KhachHang ALTER COLUMN TenKhachHang NVARCHAR(255) COLLATE Vietnamese_CI_AS;
+ALTER TABLE KhachHang ALTER COLUMN TenLienHe NVARCHAR(255) COLLATE Vietnamese_CI_AS;
+ALTER TABLE KhachHang ALTER COLUMN DiaChi NVARCHAR(255) COLLATE Vietnamese_CI_AS;
 
 INSERT INTO KhachHang (TenKhachHang, TenLienHe, SoDienThoai, DiaChi)
 VALUES
-('Khách hàng 1', 'Nguyen Thi A', '0123456789', '123 Đường ABC, TP HN'),
-('Khách hàng 2', 'Tran Thi B', '0123456790', '456 Đường DEF, TP HN'),
-('Khách hàng 3', 'Le Thi C', '0123456791', '789 Đường GHI, TP HN'),
-('Khách hàng 4', 'Pham Thi D', '0123456792', '101 Đường JKL, TP HN'),
-('Khách hàng 5', 'Hoang Thi E', '0123456793', '202 Đường MNO, TP HCM'),
-('Khách hàng 6', 'Nguyen Thi F', '0123456794', '303 Đường PQR, TP HN'),
-('Khách hàng 7', 'Tran Thi G', '0123456795', '404 Đường STU, TP HCM'),
-('Khách hàng 8', 'Le Thi H', '0123456796', '505 Đường VWX, TP HCM'),
-('Khách hàng 9', 'Pham Thi I', '0123456797', '606 Đường YZA, TP HCM'),
-('Khách hàng 10', 'Hoang Thi J', '0123456798', '707 Đường BCD, TP HCM'),
-('Khách hàng 11', 'Nguyen Thi K', '0123456799', '808 Đường EFG, TP HCM'),
-('Khách hàng 12', 'Tran Thi L', '0123456800', '909 Đường HIJ, TP HCM'),
-('Khách hàng 13', 'Le Thi M', '0123456801', '1010 Đường KLM, TP HCM'),
-('Khách hàng 14', 'Pham Thi N', '0123456802', '1111 Đường NOP, TP HCM'),
-('Khách hàng 15', 'Hoang Thi O', '0123456803', '1212 Đường QRS, TP HCM');
+(N'Khách hàng 1', N'Nguyễn Thị Ánh', '0123456789', N'123 Đường ABC, TP HN'),
+(N'Khách hàng 2', N'Trần Thị Bình', '0123456790', N'456 Đường DEF, TP HN'),
+(N'Khách hàng 3', N'Lê Thị Chi', '0123456791', N'789 Đường GHI, TP HN'),
+(N'Khách hàng 4', N'Phạm Thị Dung', '0123456792', N'101 Đường JKL, TP HN'),
+(N'Khách hàng 5', N'Hoàng Thị Em', '0123456793', N'202 Đường MNO, TP HCM'),
+(N'Khách hàng 6', N'Nguyễn Thị Phương', '0123456794', N'303 Đường PQR, TP HN'),
+(N'Khách hàng 7', N'Trần Thị Giang', '0123456795', N'404 Đường STU, TP HCM'),
+(N'Khách hàng 8', N'Lê Thị Hạnh', '0123456796', N'505 Đường VWX, TP HCM'),
+(N'Khách hàng 9', N'Phạm Thị Ích', '0123456797', N'606 Đường YZA, TP HCM'),
+(N'Khách hàng 10', N'Hoàng Thị Duyên', '0123456798', N'707 Đường BCD, TP HCM'),
+(N'Khách hàng 11', N'Nguyễn Thị Khánh', '0123456799', N'808 Đường EFG, TP HCM'),
+(N'Khách hàng 12', N'Trần Thị Lan', '0123456800', N'909 Đường HIJ, TP HCM'),
+(N'Khách hàng 13', N'Lê Thị Minh', '0123456801', N'1010 Đường KLM, TP HCM'),
+(N'Khách hàng 14', N'Phạm Thị Ngọc', '0123456802', N'1111 Đường NOP, TP HCM'),
+(N'Khách hàng 15', N'Hoàng Thị Oanh', '0123456803', N'1212 Đường QRS, TP HCM');
 
 
 
@@ -315,13 +323,14 @@ SELECT * FROM vDanhSachGiaoDichTheoLoai;
 
 
 --Chương 5: Xây dựng các procedure
-
+-- neu can xoa produce dung cau lenh nay
+DROP PROCEDURE IF EXISTS spThongKeSanPhamTonKho;
 --Câu 1 :  Procedure spThemNhaCungCap - Thêm nhà cung cấp mới
 CREATE PROCEDURE spThemNhaCungCap
-    @TenNhaCungCap VARCHAR(255),
-    @TenLienHe VARCHAR(255),
-    @SoDienThoai VARCHAR(15),
-    @DiaChi TEXT
+    @TenNhaCungCap NVARCHAR(255),
+    @TenLienHe NVARCHAR(255),
+    @SoDienThoai NVARCHAR(15),
+    @DiaChi NVARCHAR(255)
 AS
 
 BEGIN
@@ -334,21 +343,21 @@ BEGIN
 END;
 
 -- Gọi thủ tục để thêm nhà cung cấp
+
 EXEC spThemNhaCungCap
-    @TenNhaCungCap = 'Nha Cung Cấp 16',
-    @TenLienHe = 'Nguyen Thi P',
+    @TenNhaCungCap = N'Nha Cung Cấp 19',
+    @TenLienHe = N'Nguyễn Thị Hạn',
     @SoDienThoai = '0123456804',
-    @DiaChi = '1313 Đường XYZ, TP HCM';
+    @DiaChi = N'1313 Đường XYZ, TP HCM';
 
 -- Hiển thị dữ liệu từ bảng NhaCungCap
 SELECT 'NhaCungCap' AS TableName, * FROM NhaCungCap;
 
-
 --Câu 2 : Procedure spCapNhatSanPham - Cập nhật thông tin sản phẩm
 CREATE PROCEDURE spCapNhatSanPham
     @MaSanPham INT,
-    @TenSanPham VARCHAR(255),
-    @MoTa TEXT,
+    @TenSanPham NVARCHAR(255),
+    @MoTa NVARCHAR(255),
     @SoLuongTon INT,
     @Gia DECIMAL(10, 2)
 AS
@@ -368,8 +377,8 @@ END;
 -- Gọi thủ tục để cập nhật sản phẩm
 EXEC spCapNhatSanPham
     @MaSanPham = 1,
-    @TenSanPham = 'Sản phẩm cập nhật',
-    @MoTa = 'Mô tả cập nhật',
+    @TenSanPham = N'Sản phẩm cập nhật',
+    @MoTa = N'Mô tả cập nhật',
     @SoLuongTon = 150,
     @Gia = 60000;
 
@@ -483,7 +492,7 @@ CREATE PROCEDURE spThemGiaoDichKho
     @MaSanPham INT,
     @NgayGiaoDich DATE,
     @SoLuong INT,
-    @LoaiGiaoDich VARCHAR(50),
+    @LoaiGiaoDich NVARCHAR(50),
     @MaDonHang INT
 AS
 BEGIN
@@ -522,14 +531,13 @@ EXEC spThongKeSanPhamTonKho;
 
 -- Hiển thị dữ liệu từ bảng SanPham
 SELECT 'SanPham' AS TableName, * FROM SanPham WHERE SoLuongTon > 0;
-
 --Câu 10 :cập nhật thông tin khách hàng trong bảng KhachHang.
 CREATE PROCEDURE spCapNhatThongTinKhachHang
     @MaKhachHang INT,
-    @TenKhachHang VARCHAR(255),
-    @TenLienHe VARCHAR(255),
-    @SoDienThoai VARCHAR(15),
-    @DiaChi TEXT
+    @TenKhachHang NVARCHAR(255) ,
+    @TenLienHe NVARCHAR(255) ,
+    @SoDienThoai NVARCHAR(15) ,
+    @DiaChi NVARCHAR(255)--
 AS
 BEGIN
     -- Cập nhật thông tin khách hàng trong bảng KhachHang
@@ -547,10 +555,10 @@ END;
 -- Gọi thủ tục để cập nhật thông tin khách hàng
 EXEC spCapNhatThongTinKhachHang
     @MaKhachHang = 1,
-    @TenKhachHang = 'Nguyen Thi Q',
-    @TenLienHe = 'Nguyen Thi P',
+    @TenKhachHang = N'Vũ Thi Hoa',
+    @TenLienHe = N'Nguyễn Thị Hải',
     @SoDienThoai = '0123456800',
-    @DiaChi = '2222 Đường XYZ, TP HCM';
+    @DiaChi = N'2222 Đường XYZ, TP HCM';
 
 -- Hiển thị dữ liệu từ bảng KhachHang
 SELECT 'KhachHang' AS TableName, * FROM KhachHang WHERE MaKhachHang = 1;
@@ -581,7 +589,7 @@ END;
 
 -- Gọi trigger và hiển thị kết quả
 INSERT INTO NhaCungCap (TenNhaCungCap, TenLienHe, SoDienThoai, DiaChi)
-VALUES ('Nha Cung Cấp 16', 'Nguyen Thi P', '0123456804', '1313 Đường XYZ, TP HCM');
+VALUES (N'Nha Cung Cấp 16', 'Nguyen Thi P', '0123456804', '1313 Đường XYZ, TP HCM');
 
 -- Hiển thị dữ liệu từ bảng NhaCungCap
 SELECT 'NhaCungCap' AS TableName, * FROM NhaCungCap;
@@ -594,7 +602,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaSanPham INT;
-    DECLARE @TenSanPham VARCHAR(255);
+    DECLARE @TenSanPham NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaSanPham = MaSanPham, @TenSanPham = TenSanPham FROM inserted;
     
     PRINT 'San pham voi ma: ' + CAST(@MaSanPham AS VARCHAR) + ' da duoc cap nhat: ' + @TenSanPham;
@@ -616,7 +624,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaKhachHang INT;
-    DECLARE @TenKhachHang VARCHAR(255);
+    DECLARE @TenKhachHang NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaKhachHang = MaKhachHang, @TenKhachHang = TenKhachHang FROM inserted;
 
     PRINT 'Thông tin khách hàng với mã: ' + CAST(@MaKhachHang AS VARCHAR) + ' đã được cập nhật: ' + @TenKhachHang;
@@ -793,7 +801,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaKhachHang INT;
-    DECLARE @TenKhachHang VARCHAR(255);
+    DECLARE @TenKhachHang NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaKhachHang = MaKhachHang, @TenKhachHang = TenKhachHang FROM inserted;
 
     PRINT 'Khach hang voi ma: ' + CAST(@MaKhachHang AS VARCHAR) + ' da duoc cap nhat thong tin: ' + @TenKhachHang;
@@ -847,3 +855,7 @@ DENY UPDATE ON KhachHang TO NhanVienKho;
 
 EXEC sp_helprotect NULL, 'NhanVienKho';
 EXEC sp_helprotect NULL, 'QuanLy';
+
+
+
+
