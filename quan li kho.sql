@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS NhaCungCap;
 CREATE TABLE NhaCungCap (
     MaNhaCungCap INT IDENTITY(1,1) PRIMARY KEY, -- Mã nhà cung cấp
     TenNhaCungCap NVARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,         -- Tên nhà cung cấp
-    TenLienHe VARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,             -- Tên người liên hệ
+    TenLienHe NVARCHAR(255) COLLATE Vietnamese_CI_AS NOT NULL,             -- Tên người liên hệ
     SoDienThoai NVARCHAR(15) COLLATE Vietnamese_CI_AS,                    -- Số điện thoại
     DiaChi TEXT                                  -- Địa chỉ
 );
@@ -602,7 +602,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaSanPham INT;
-    DECLARE @TenSanPham NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
+    DECLARE @TenSanPham NVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaSanPham = MaSanPham, @TenSanPham = TenSanPham FROM inserted;
     
     PRINT 'San pham voi ma: ' + CAST(@MaSanPham AS VARCHAR) + ' da duoc cap nhat: ' + @TenSanPham;
@@ -624,7 +624,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaKhachHang INT;
-    DECLARE @TenKhachHang NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
+    DECLARE @TenKhachHang NVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaKhachHang = MaKhachHang, @TenKhachHang = TenKhachHang FROM inserted;
 
     PRINT 'Thông tin khách hàng với mã: ' + CAST(@MaKhachHang AS VARCHAR) + ' đã được cập nhật: ' + @TenKhachHang;
@@ -801,7 +801,7 @@ AFTER UPDATE
 AS
 BEGIN
     DECLARE @MaKhachHang INT;
-    DECLARE @TenKhachHang NVARCHARVARCHAR(255) COLLATE Vietnamese_CI_AS;
+    DECLARE @TenKhachHang NVARCHAR(255) COLLATE Vietnamese_CI_AS;
     SELECT @MaKhachHang = MaKhachHang, @TenKhachHang = TenKhachHang FROM inserted;
 
     PRINT 'Khach hang voi ma: ' + CAST(@MaKhachHang AS VARCHAR) + ' da duoc cap nhat thong tin: ' + @TenKhachHang;
